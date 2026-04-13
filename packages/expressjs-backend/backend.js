@@ -40,9 +40,15 @@ const findUserByName = (name) => {
         (user) => user["name"] === name
     )
 }
+
+const findUserById = (id) => {
+    return users["users_list"].find((user) => 
+        user['id'] === id
+    )
+}
+
 app.get("/users", (req, res) => {
-    const name = req.query.name
-  res.send("users");
+  const name = req.query.name
   if (name != undefined) {
     let result = findUserByName(name);
     result = {user_list: result};
@@ -51,6 +57,18 @@ app.get("/users", (req, res) => {
     res.send(users);
   }
 });
+
+app.get("/users/:id", (req, res) => {
+    // same as req.params.id
+    const id = req.params["id"];
+    let result = findUserById(id);
+    if (result === undefined) {
+        res.status(404);
+    }
+    else {
+        res.send(result);
+    }
+})
 
 app.listen(port, () => {
   console.log(`Example app listening at http://localhost:${port}`);
