@@ -5,7 +5,7 @@ function Form(props) {
         name: "",
         job: ""
     });
-
+          
     function handleChange(event) {
     const { name, value } = event.target;
     if (name === "job")
