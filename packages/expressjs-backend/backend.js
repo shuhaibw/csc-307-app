@@ -41,6 +41,13 @@ const findUserByName = (name) => {
     )
 }
 
+const findUserByNameJob = (name, job) => {
+    return users["users_list"].filter(
+        (user) => user["name"] === name
+        && user["job"] === job
+    )
+}
+
 const findUserById = (id) => {
     return users["users_list"].find((user) => 
         user['id'] === id
@@ -52,14 +59,34 @@ const addUser = (user) => {
     return user;
 }
 
+const removeUserById = (id) => {
+    // findIndex finds returns index not value
+    const index = users["users_list"].findIndex((user) => 
+        user['id'] === id
+    )
+
+    if (index === -1) {
+        return null;
+    }
+    // return array of removed 
+    return users["users_list"].splice(index, 1)[0]
+}
+
 app.get("/users", (req, res) => {
-  const name = req.query.name
-  if (name != undefined) {
-    let result = findUserByName(name);
-    result = {user_list: result};
-    res.send(result);
-  } else {
-    res.send(users);
+  const name = req.query.name;
+  const job = req.query.job;
+  if (name && job) {
+    let result1 = findUserByNameJob(name, job);
+    result1 = {users_list: result1};
+    return res.send(result1);
+  } 
+  else if (name) { 
+    let result2 = findUserByName(name);
+    result2 = {users_list: result2};
+    return res.send(result2);
+  }
+  else {
+    return res.send(users); 
   }
 });
 
@@ -68,17 +95,28 @@ app.get("/users/:id", (req, res) => {
     const id = req.params["id"];
     let result = findUserById(id);
     if (result === undefined) {
-        res.status(404);
+        return res.status(404).send();
     }
     else {
-        res.send(result);
+        res.status(200).send(result);
     }
 })
 
 app.post("/users", (req, res) => {
     const userToAdd = req.body;
     addUser(userToAdd);
-    res.send();
+    res.status(201).send(userToAdd);
+})
+
+app.delete("/users/:id", (req, res) => {
+    const id = req.params["id"];
+    const deletedUser = removeUserById(id);
+    if (!deletedUser) {
+        return res.status(404).send();
+    }
+    else {
+        return res.status(204).send();
+    }
 })
 
 app.listen(port, () => {
