@@ -26,6 +26,7 @@
   },
   "homepage": "https://github.com/shuhaibw/csc-307-app#readme",
   "dependencies": {
+    "cors": "^2.8.6",
     "express": "^5.2.1"
   }
 }
