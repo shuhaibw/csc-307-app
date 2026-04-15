@@ -74,6 +74,11 @@ const removeUserById = (id) => {
     return users["users_list"].splice(index, 1)[0]
 }
 
+function generateId() {
+  const newId = Math.floor(Math.random() * 100000)
+  return newId;
+}
+
 app.get("/users", (req, res) => {
   const name = req.query.name;
   const job = req.query.job;
@@ -106,6 +111,7 @@ app.get("/users/:id", (req, res) => {
 
 app.post("/users", (req, res) => {
     const userToAdd = req.body;
+    userToAdd.id = generateId();
     addUser(userToAdd);
     res.status(201).send(userToAdd);
 })
