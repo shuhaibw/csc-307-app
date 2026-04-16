@@ -75,7 +75,7 @@ const removeUserById = (id) => {
 }
 
 function generateId() {
-  const newId = Math.floor(Math.random() * 100000)
+  const newId = String(Math.floor(Math.random() * 100000));
   return newId;
 }
 
@@ -117,7 +117,7 @@ app.post("/users", (req, res) => {
 })
 
 app.delete("/users/:id", (req, res) => {
-    const id = req.params["id"];
+    const id = req.params["id"]; 
     const deletedUser = removeUserById(id);
     if (!deletedUser) {
         return res.status(404).send();

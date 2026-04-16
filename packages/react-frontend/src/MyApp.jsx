@@ -5,20 +5,31 @@ import Form from "./Form";
 function MyApp() {
   const [characters, setCharacters] = useState([]);
 
-  function removeOneCharacter(index) {
-    const updated = characters.filter((character, i) => {
-        return i !== index;
-    });
+  function removeOneCharacter(id) {
+     console.log("removeOneCharacter got:", id);
+    deleteUser(id)
+      .then((res) => {
+        if (res.status === 404) {
+          console.log("User not found")
+        }
+        else if (res.status === 204) {
+        const updated = characters.filter((character) => {
+        return character.id !== id;
+    });  
+
     setCharacters(updated);
+    }
+    })  
   }
+   
 
 function updateList(person) {
   postUser(person)
     .then((res) => {
-      res.json()
+      return res.json()
     })
-    .then(() => {
-      setCharacters([...characters, person])
+    .then((newUser) => {
+      setCharacters([...characters, newUser])
     })
 
     .catch((error) => {
@@ -43,6 +54,14 @@ function updateList(person) {
     return promise;
   }
 
+  function deleteUser(id) {
+    const promise = fetch(`http://localhost:8000/users/${id}`, {
+      method: "DELETE",
+    });  
+
+    return promise;
+  }
+
   useEffect(() => {
     fetchUsers()
       .then((res => res.json()))
@@ -63,4 +82,6 @@ function updateList(person) {
   );
 }
 
-export default MyApp;
+export default MyApp; 
+
+                      
