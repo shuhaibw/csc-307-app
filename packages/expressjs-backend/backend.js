@@ -1,9 +1,11 @@
 import express from "express";
-import {  addUser,
-          getUsers,
-          findUserById,
-          findUserByName,
-          findUserByJob,} from './services/user-service'
+import {
+  addUser,
+  getUsers,
+  findUserById,
+  findUserByName,
+  findUserByJob,
+} from './services/user-service.js'
 import dotenv from "dotenv";
 import mongoose from "mongoose";
 
@@ -15,7 +17,7 @@ mongoose.set("debug", true);
 mongoose
   .connect(MONGO_CONNECTION_STRING + "users") // connect to Db "users"
   .catch((error) => console.log(error));
-  
+
 const app = express();
 const port = 8000;
 
