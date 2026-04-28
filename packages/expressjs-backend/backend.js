@@ -5,6 +5,8 @@ import {
   findUserById,
   findUserByName,
   findUserByJob,
+  findUserByNameJob,
+  removeUserById
 } from './services/user-service.js'
 import dotenv from "dotenv";
 import mongoose from "mongoose";
@@ -28,7 +30,7 @@ app.get("/users", (req, res) => {
   const job = req.query.job;
   if (name && job) {
     // no 404 error not asking for specific resource
-    getUsers(name, job)
+    findUserByNameJob(name, job)
       .then((listUsers) => {
         return res.status(200).send(listUsers);
       })
@@ -40,6 +42,15 @@ app.get("/users", (req, res) => {
     findUserByName(name)
       .then((userByName) => {
         return res.status(200).send(userByName);
+      })
+      .catch((err) => {
+        return res.status(500).send("Error : " + err);
+      })
+  }
+    else if (job) { 
+    findUserByJob(job)
+      .then((userByJob) => {
+        return res.status(200).send(userByJob);
       })
       .catch((err) => {
         return res.status(500).send("Error : " + err);
@@ -83,13 +94,18 @@ app.post("/users", (req, res) => {
 
 app.delete("/users/:id", (req, res) => {
     const id = req.params["id"];
-    const deletedUser = removeUserById(id);
-    if (!deletedUser) {
-        return res.status(404).send();
-    }
-    else {
-        return res.status(204).send();
-    }
+    removeUserById(id)
+      .then((removedUser) => {
+          if (!removedUser) {
+            return res.status(404).send();
+          }
+          else {
+            return res.status(204).send();
+          }
+      })
+      .catch((err) => {
+        return res.status(500).send("Error : " + err);
+      })
 })
 
 app.listen(port, () => {
